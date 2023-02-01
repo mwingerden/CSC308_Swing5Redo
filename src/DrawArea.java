@@ -73,6 +73,11 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
 
         if(dragging) {
             g.setColor(Color.WHITE);
+//            if(x2 - x1 < 0) {
+//                int temp = x1;
+//                x1 = x2;
+//                x2 = temp;
+//            }
             switch (shape) {
                 case "rectangle" -> g.fillRect(x1, y1, x2 - x1, y2 - y1);
                 case "circle" -> g.fillOval(x1, y1, x2 - x1, y2 - y1);
@@ -97,7 +102,8 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     }
 
     /**
-     * Gets the second coordinates and adds the desired shape to the list.
+     * Gets the second coordinates and adds the desired shape to the list. Does not add any shape
+     * that has a negative width and/or height.
      *
      * @param e   Holds information about the mouse.
      **/
@@ -106,12 +112,14 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
         x2 = e.getX();
         y2 = e.getY();
         dragging = false;
-        switch (shape) {
-            case "rectangle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.RECTANGLE));
-            case "circle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.CIRCLE));
-            case "arc" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.ARC));
+        if(x2 - x1 >= 0 && y2 - y1 >= 0) {
+            switch (shape) {
+                case "rectangle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.RECTANGLE));
+                case "circle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.CIRCLE));
+                case "arc" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.ShapeType.ARC));
+            }
+            repaint();
         }
-        repaint();
     }
 
     /**
@@ -123,6 +131,7 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     public void mouseDragged(MouseEvent e) {
         x2 = e.getX();
         y2 = e.getY();
+
         dragging = true;
         repaint();
     }
