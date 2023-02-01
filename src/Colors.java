@@ -14,7 +14,7 @@ public class Colors extends JFrame implements ActionListener {
     public void createAndShowGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel window = new JPanel(new BorderLayout());
+        setLayout(new BorderLayout());
 
         JPanel southPanel = new JPanel();
         southPanel.setBackground(Color.CYAN);
@@ -25,7 +25,7 @@ public class Colors extends JFrame implements ActionListener {
 
         JPanel westPanel = new JPanel();
         westPanel.setBackground(Color.PINK);
-        String [] colors = {"Black", "Red", "Blue", "Green", "Yellow"};
+        String [] colors = {"Black", "Red", "Blue", "Green", "Yellow", "Orange", "Pink"};
         JComboBox<String> list = new JComboBox<>(colors);
         JRadioButton rectangle = new JRadioButton("Rectangle");
         JRadioButton circle = new JRadioButton("Circle");
@@ -43,6 +43,9 @@ public class Colors extends JFrame implements ActionListener {
         westPanel.add(arc);
 
         JPanel centerPanel = drawArea;
+        centerPanel.setOpaque(true);
+        centerPanel.setBackground(Color.GRAY);
+//        JPanel centerPanel = new JPanel();
 
         list.addActionListener(this);
         rectangle.addActionListener(this);
@@ -51,11 +54,10 @@ public class Colors extends JFrame implements ActionListener {
         b1.addActionListener(this);
         b2.addActionListener(this);
 
-        window.add(southPanel, BorderLayout.SOUTH);
-        window.add(westPanel, BorderLayout.WEST);
-        window.add(centerPanel, BorderLayout.CENTER);
+        add(southPanel, BorderLayout.SOUTH);
+        add(westPanel, BorderLayout.WEST);
+        add(centerPanel, BorderLayout.CENTER);
 
-        add(window);
         setTitle("Colors");
         setSize(500, 500);
         setVisible(true);

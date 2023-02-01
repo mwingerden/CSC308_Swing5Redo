@@ -1,8 +1,8 @@
-public class ColorsShapes {
+public class ColoredShape {
     private final int x1, y1, x2, y2;
     String color;
 
-    static enum Type {
+    enum Type {
         RECTANGLE,
         CIRCLE,
         ARC
@@ -10,7 +10,7 @@ public class ColorsShapes {
 
     Type type;
 
-    public ColorsShapes(int x1, int y1, int x2, int y2, String color, Type type) {
+    public ColoredShape(int x1, int y1, int x2, int y2, String color, Type type) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;

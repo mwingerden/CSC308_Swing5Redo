@@ -6,54 +6,51 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 public class DrawArea extends JPanel implements MouseListener, MouseMotionListener {
-    int x1, y1,x2, y2;
-    ArrayList<ColorsShapes> shapes = new ArrayList<>();
-    String shape;
-    String color;
-    ColorsShapes currentShape;
-    boolean dragged = false;
+    int x1,x2,y1,y2 = 0;
+    ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
+    String color = "BLACK";
+    String shape = "rectangle";
 
-    public DrawArea() {
+    DrawArea() {
         addMouseListener(this);
         addMouseMotionListener(this);
-        shape = "rectangle";
-        color = "BLACK";
     }
 
     public void paintComponent(Graphics g) {
-        if(dragged) {
-            g.fillRect(x1, y1, x2, y2);
-            g.setColor(Color.WHITE);
-        }
+        super.paintComponent(g);
 
-        //TODO: Figure out how to draw with negative second release of click
-        for(ColorsShapes current : shapes) {
-            if(current.getType() == ColorsShapes.Type.RECTANGLE) {
-                g.fillRect(current.getX1(), current.getY1(),
-                        current.getX2()-current.getX1(),
-                        current.getY2()-current.getY1());
-            }
-            else if(current.getType() == ColorsShapes.Type.CIRCLE) {
-                g.fillOval(current.getX1(), current.getY1(),
-                        current.getX2()-current.getX1(),
-                        current.getY2()-current.getY1());
-            }
-            //TODO: Fix arc
-            //TODO: Figure out drawing bug
-            else if(current.getType() == ColorsShapes.Type.ARC) {
-                g.fillArc(current.getX1(), current.getY1(),
-                        current.getX2()-current.getX1(),
-                        current.getY2()-current.getY1(), 0, 50);
-            }
-
+        for(ColoredShape current : coloredShapes) {
             switch (current.getColor()) {
                 case "BLACK" -> g.setColor(Color.BLACK);
                 case "RED" -> g.setColor(Color.RED);
                 case "BLUE" -> g.setColor(Color.BLUE);
                 case "GREEN" -> g.setColor(Color.GREEN);
                 case "YELLOW" -> g.setColor(Color.YELLOW);
+                case "ORANGE" -> g.setColor(Color.ORANGE);
+                case "PINK" -> g.setColor(Color.PINK);
+            }
+            if(current.getType() == ColoredShape.Type.RECTANGLE) {
+                g.fillRect(current.getX1(), current.getY1(),
+                        current.getX2()-current.getX1(),
+                        current.getY2()-current.getY1());
+            }
+            else if(current.getType() == ColoredShape.Type.CIRCLE) {
+                g.fillOval(current.getX1(), current.getY1(),
+                        current.getX2()-current.getX1(),
+                        current.getY2()-current.getY1());
+            }
+            //TODO: Fix arc
+            //TODO: Figure out drawing bug
+            else if(current.getType() == ColoredShape.Type.ARC) {
+                g.fillArc(current.getX1(), current.getY1(),
+                        current.getX2()-current.getX1(),
+                        current.getY2()-current.getY1(), 0, 50);
             }
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
     }
 
     @Override
@@ -66,22 +63,12 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     public void mouseReleased(MouseEvent e) {
         x2 = e.getX();
         y2 = e.getY();
-//        System.out.println(x1 + ", " + y1 + ", " + x2 + ", " + y2);
-        dragged = false;
         switch (shape) {
-            case "rectangle" -> shapes.add(new ColorsShapes(x1, y1, x2, y2, color, ColorsShapes.Type.RECTANGLE));
-            case "circle" -> shapes.add(new ColorsShapes(x1, y1, x2, y2, color, ColorsShapes.Type.CIRCLE));
-            case "arc" -> shapes.add(new ColorsShapes(x1, y1, x2, y2, color, ColorsShapes.Type.ARC));
+            case "rectangle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.RECTANGLE));
+            case "circle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.CIRCLE));
+            case "arc" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.ARC));
         }
         repaint();
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-//        dragged = true;
-//        x2 = e.getX();
-//        y2 = e.getY();
-//        repaint();
     }
 
     public void setShape(String shape) {
@@ -93,19 +80,15 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     }
 
     public void undo() {
-        if(!shapes.isEmpty()) {
-            shapes.remove(shapes.size() - 1);
+        if(!coloredShapes.isEmpty()) {
+            coloredShapes.remove(coloredShapes.size() - 1);
         }
         repaint();
     }
 
     public void erase() {
-        shapes.clear();
+        coloredShapes.clear();
         repaint();
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
     }
 
     @Override
@@ -115,6 +98,11 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
 
     }
 
