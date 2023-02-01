@@ -10,6 +10,7 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     String color = "BLACK";
     String shape = "rectangle";
+    boolean dragging = false;
 
     DrawArea() {
         addMouseListener(this);
@@ -18,6 +19,8 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        double angleRadians;
+        double length;
 
         for(ColoredShape current : coloredShapes) {
             switch (current.getColor()) {
@@ -39,12 +42,25 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
                         current.getX2()-current.getX1(),
                         current.getY2()-current.getY1());
             }
-            //TODO: Fix arc
-            //TODO: Figure out drawing bug
             else if(current.getType() == ColoredShape.Type.ARC) {
+                angleRadians = Math.atan2(-current.getY1(), current.getX1());
+                length = Math.toDegrees(angleRadians);
                 g.fillArc(current.getX1(), current.getY1(),
                         current.getX2()-current.getX1(),
-                        current.getY2()-current.getY1(), 0, 50);
+                        current.getY2()-current.getY1(), 0, (int) length);
+            }
+        }
+
+        if(dragging) {
+            g.setColor(Color.WHITE);
+            switch (shape) {
+                case "rectangle" -> g.fillRect(x1, y1, x2 - x1, y2 - y1);
+                case "circle" -> g.fillOval(x1, y1, x2 - x1, y2 - y1);
+                case "arc" -> {
+                    angleRadians = Math.atan2(-y1, x1);
+                    length = Math.toDegrees(angleRadians);
+                    g.fillArc(x1, y1, x2 - x1, y2 - y1, 0, (int) length);
+                }
             }
         }
     }
@@ -63,11 +79,20 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
     public void mouseReleased(MouseEvent e) {
         x2 = e.getX();
         y2 = e.getY();
+        dragging = false;
         switch (shape) {
             case "rectangle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.RECTANGLE));
             case "circle" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.CIRCLE));
             case "arc" -> coloredShapes.add(new ColoredShape(x1, y1, x2, y2, color, ColoredShape.Type.ARC));
         }
+        repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        x2 = e.getX();
+        y2 = e.getY();
+        dragging = true;
         repaint();
     }
 
@@ -101,10 +126,6 @@ public class DrawArea extends JPanel implements MouseListener, MouseMotionListen
 
     }
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
 
     @Override
     public void mouseMoved(MouseEvent e) {

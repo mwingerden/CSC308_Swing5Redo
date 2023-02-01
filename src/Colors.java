@@ -45,7 +45,6 @@ public class Colors extends JFrame implements ActionListener {
         JPanel centerPanel = drawArea;
         centerPanel.setOpaque(true);
         centerPanel.setBackground(Color.GRAY);
-//        JPanel centerPanel = new JPanel();
 
         list.addActionListener(this);
         rectangle.addActionListener(this);
