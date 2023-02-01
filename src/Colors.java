@@ -4,13 +4,35 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+/**
+ * The Colors class holds implementation and set up of the Java Swing GUI that can create a limited
+ * amount of colored objects specified by the user.
+ *
+ * @author Matthew Wingerden
+ * @version 1.0
+ * @since 2023-1-02
+ *
+ */
+
 public class Colors extends JFrame implements ActionListener {
     DrawArea drawArea = new DrawArea();
-    public static void main(String[] args) {
+
+    /**
+     * The main inside the class to demonstrate how to call and run the program.
+     *
+     * @param argv   Holds the arguments from the console log.
+     *
+     **/
+    public static void main(String[] argv) {
         Colors colors = new Colors();
         colors.createAndShowGUI();
     }
 
+    /**
+     * This method creates the specific JPanels that hold the buttons and includes the drawing area
+     * for the shapes. The method ends with adding all the panels appropriately in a border layout.
+     *
+     **/
     public void createAndShowGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -62,9 +84,13 @@ public class Colors extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    /**
+     * This method holds all the actions for all possible buttons on the GUI.
+     *
+     * @param e   Holds the action that was performed on the GUI.
+     **/
     @Override
     public void actionPerformed(ActionEvent e) {
-//        System.out.println(e.getActionCommand());
         if(e.getActionCommand().equals("comboBoxChanged")) {
             JComboBox tmp = (JComboBox) e.getSource();
             drawArea.setColor(Objects.requireNonNull(tmp.getSelectedItem()).toString().toUpperCase());
